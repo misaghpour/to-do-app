@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_list_app/controllers/home_controller.dart';
 
+import 'components/completed_task_item.dart';
+import 'components/not_completed_task_item.dart';
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
@@ -26,7 +29,7 @@ class HomeScreen extends StatelessWidget {
               },
               child: Icon(
                 Icons.info_outline,
-                color: Colors.grey,
+                color: Colors.blue,
               ),
             ),
           )
@@ -43,18 +46,29 @@ class HomeScreen extends StatelessWidget {
               Container(
                 child: Row(children: [
                   Expanded(
-                      child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(16)),
-                    child: Center(
-                      child: Text(
-                        'Not Completed',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.white),
+                      child: InkWell(
+                    onTap: () {
+                      controller.isCompletedMode.value = false;
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: !controller.isCompletedMode.value
+                              ? Colors.blue
+                              : Colors.grey.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(16)),
+                      child: Center(
+                        child: Text(
+                          'Not Completed',
+                          style: TextStyle(
+                              fontWeight: !controller.isCompletedMode.value
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              fontSize: 18,
+                              color: !controller.isCompletedMode.value
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
                       ),
                     ),
                   )),
@@ -62,15 +76,29 @@ class HomeScreen extends StatelessWidget {
                     width: 5,
                   ),
                   Expanded(
-                      child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(16)),
-                    child: Center(
-                      child: Text(
-                        'Completed',
-                        style: TextStyle(fontSize: 18),
+                      child: InkWell(
+                    onTap: () {
+                      controller.isCompletedMode.value = true;
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: controller.isCompletedMode.value
+                              ? Colors.blue
+                              : Colors.grey.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(16)),
+                      child: Center(
+                        child: Text(
+                          'Completed',
+                          style: TextStyle(
+                              color: controller.isCompletedMode.value
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontSize: 18,
+                              fontWeight: controller.isCompletedMode.value
+                                  ? FontWeight.bold
+                                  : FontWeight.normal),
+                        ),
                       ),
                     ),
                   )),
@@ -84,96 +112,57 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      for (String taskStr in controller.todoList)
-                        Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  border: Border.all(
-                                      color: Colors.blue, width: 1.5)),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 8),
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                      value: true,
-                                      onChanged: (value) {
-                                        // should be change
-                                      }),
-                                  Expanded(
-                                    child: Container(
-                                      width: double.infinity,
-                                      child: Text(
-                                        taskStr,
-                                        style: TextStyle(fontSize: 20),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Icon(
-                                    Icons.edit_outlined,
-                                    color: Colors.blue,
-                                    size: 32,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Icon(
-                                    Icons.delete_outline,
-                                    color: Colors.red,
-                                    size: 32,
-                                  )
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            )
+                    children: !controller.isCompletedMode.value
+                        ? [
+                            for (String taskStr in controller.todoList)
+                              NotCompletedTaskItem(taskStr: taskStr),
+                          ]
+                        : [
+                            for (String taskStr in controller.todoList)
+                              CompletedTaskItem(taskStr: taskStr),
                           ],
-                        ),
-                    ],
                   ),
                 ),
               ),
-              Divider(
-                color: Colors.blue,
-              ),
-              Container(
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: TextField(
-                      style: TextStyle(fontSize: 20),
-                      controller: controller.textController,
-                    )),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        controller.addTask();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(50))),
-                        child: Text(
-                          ' + ',
-                          style: TextStyle(fontSize: 30, color: Colors.white),
-                        ),
+              !controller.isCompletedMode.value
+                  ? Container(
+                      width: double.infinity,
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: TextField(
+                            decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 8),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16))),
+                            style: TextStyle(fontSize: 20),
+                            controller: controller.textController,
+                          )),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              controller.addTask();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50))),
+                              child: Text(
+                                ' + ',
+                                style: TextStyle(
+                                    fontSize: 30, color: Colors.white),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     )
-                  ],
-                ),
-              )
+                  : SizedBox()
             ],
           ),
         ),
