@@ -15,8 +15,34 @@ class WelcomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Spacer(),
-            Text('To do app'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 20,
+                ),
+                Image.asset(
+                  "assets/images/welcome_logo.png",
+                  width: Get.width / 4,
+                ),
+              ],
+            ),
+            Text(
+              'To do app',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              'This is a sample description for app',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
             Spacer(),
+            Text(
+              'v 1.0.0',
+              style: TextStyle(color: Colors.grey),
+            )
           ],
         ),
       ),
