@@ -6,6 +6,7 @@ import 'package:to_do_list_app/routes/app_pages.dart';
 
 /*
 
+Note: This command should run after you have made changes for Hive Data Classes
 flutter packages pub run build_runner build
 
 */

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:to_do_list_app/data/constants.dart';
 import 'package:to_do_list_app/routes/app_pages.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class WelcomeScreen extends StatelessWidget {
                   width: 20,
                 ),
                 Image.asset(
-                  "assets/images/welcome_logo.png",
+                  MyAssets.WELCOME_LOGO,
                   width: Get.width / 4,
                 ),
               ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:to_do_list_app/data/models/task.dart';
+import 'package:to_do_list_app/widgets/dialogs/about_us.dart';
 import 'package:uuid/uuid.dart';
 
 class HomeController extends GetxController {
@@ -210,37 +211,6 @@ class HomeController extends GetxController {
   }
 
   showInfoDialog() {
-    Get.defaultDialog(
-        title: 'About App',
-        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-        content: Column(
-          children: [
-            SizedBox(
-              height: 12,
-            ),
-            Text(
-              'This app is developed by M. Misaghpour',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            InkWell(
-              onTap: () {
-                Get.back();
-              },
-              child: Container(
-                padding: EdgeInsets.all(12),
-                child: Center(
-                  child: Text(
-                    'OK',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ));
+    showAboutUsDialog();
   }
 }
