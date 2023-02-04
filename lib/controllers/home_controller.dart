@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:to_do_list_app/data/models/task.dart';
+import 'package:uuid/uuid.dart';
 
 class HomeController extends GetxController {
   final textController = TextEditingController();
@@ -9,10 +10,29 @@ class HomeController extends GetxController {
   RxList<Task> todoList = <Task>[].obs;
   RxBool isCompletedMode = false.obs;
 
+  RxList<Task> get notCompletedList {
+    RxList<Task> list = <Task>[].obs;
+    for (int i = 0; i < todoList.length; i++) {
+      if (!todoList[i].isCompleted) {
+        list.add(todoList[i]);
+      }
+    }
+    return list;
+  }
+
+  RxList<Task> get completedList {
+    RxList<Task> list = <Task>[].obs;
+    for (int i = 0; i < todoList.length; i++) {
+      if (todoList[i].isCompleted) {
+        list.add(todoList[i]);
+      }
+    }
+    return list;
+  }
+
   @override
   void onInit() {
     _initData();
-    // TODO: implement onInit
     super.onInit();
   }
 
@@ -28,9 +48,32 @@ class HomeController extends GetxController {
 
   addTask() {
     if (textController.text.isNotEmpty) {
-      // todoList.add(textController.text);
+      var uuid = Uuid();
+      final newTask =
+          Task(title: textController.text, date: DateTime.now(), id: uuid.v4());
+      todoList.add(newTask);
+      refreshCache();
       textController.text = "";
     }
+  }
+
+  toggleDoneTask(Task task) {
+    final index = todoList.indexWhere((element) => element.id == task.id);
+    todoList[index].isCompleted = true;
+    todoList.refresh();
+    refreshCache();
+  }
+
+  toggleNoteDoneTask(Task task) {
+    final index = todoList.indexWhere((element) => element.id == task.id);
+    todoList[index].isCompleted = false;
+    todoList.refresh();
+    refreshCache();
+  }
+
+  refreshCache() async {
+    Box box = await Hive.openBox("todo_db");
+    box.put("list", todoList.toList());
   }
 
   deleteTask() {

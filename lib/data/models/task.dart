@@ -4,16 +4,16 @@ part 'task.g.dart';
 @HiveType(typeId: 0)
 class Task {
   @HiveField(0)
-  final DateTime date;
+   DateTime date;
 
   @HiveField(1)
-  final String title;
+   String title;
 
   @HiveField(2)
-  final bool isCompleted;
+   bool isCompleted;
 
   @HiveField(3)
-  final String id;
+   String id;
 
   Task({required this.title, this.isCompleted = false, required this.date, required this.id});
 }

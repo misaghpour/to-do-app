@@ -115,12 +115,12 @@ class HomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: !controller.isCompletedMode.value
                         ? [
-                            for (Task task in controller.todoList)
-                              NotCompletedTaskItem(taskStr: task.title),
+                            for (Task task in controller.notCompletedList)
+                              NotCompletedTaskItem(task: task,),
                           ]
                         : [
-                            for (Task task in controller.todoList)
-                              CompletedTaskItem(taskStr: task.title),
+                            for (Task task in controller.completedList)
+                              CompletedTaskItem(task: task,),
                           ],
                   ),
                 ) : SizedBox(),

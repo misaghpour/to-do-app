@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:to_do_list_app/data/models/task.dart';
 
 import '../../../controllers/home_controller.dart';
 
 class NotCompletedTaskItem extends StatelessWidget {
   NotCompletedTaskItem({
     Key? key,
-    required this.taskStr,
+    required this.task,
   }) : super(key: key);
 
-  final String taskStr;
+  final Task task;
   final HomeController controller = Get.find();
 
   @override
@@ -24,15 +25,15 @@ class NotCompletedTaskItem extends StatelessWidget {
           child: Row(
             children: [
               Checkbox(
-                  value: false,
+                  value: task.isCompleted,
                   onChanged: (value) {
-                    // should be change
+                    controller.toggleDoneTask(task);
                   }),
               Expanded(
                 child: Container(
                   width: double.infinity,
                   child: Text(
-                    taskStr,
+                    task.title,
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
