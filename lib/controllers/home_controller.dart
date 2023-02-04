@@ -7,6 +7,8 @@ import 'package:uuid/uuid.dart';
 class HomeController extends GetxController {
   final textController = TextEditingController();
 
+  final editTextController = TextEditingController();
+
   RxList<Task> todoList = <Task>[].obs;
   RxBool isCompletedMode = false.obs;
 
@@ -76,7 +78,7 @@ class HomeController extends GetxController {
     box.put("list", todoList.toList());
   }
 
-  deleteTask() {
+  deleteTask(Task task) {
     Get.defaultDialog(
         title: 'Delete Task',
         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -98,6 +100,10 @@ class HomeController extends GetxController {
                 Expanded(
                   child: InkWell(
                     onTap: () {
+                      final index = todoList
+                          .indexWhere((element) => element.id == task.id);
+                      todoList.removeAt(index);
+                      refreshCache();
                       Get.back();
                       // todo: delete task
                     },
@@ -134,7 +140,8 @@ class HomeController extends GetxController {
         ));
   }
 
-  editTask() {
+  editTask(Task task) {
+    editTextController.text = task.title;
     Get.defaultDialog(
         title: 'Edit Task',
         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -144,6 +151,7 @@ class HomeController extends GetxController {
               height: 12,
             ),
             TextField(
+              controller: editTextController,
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(horizontal: 8),
                   border: OutlineInputBorder(
@@ -159,8 +167,14 @@ class HomeController extends GetxController {
                 Expanded(
                   child: InkWell(
                     onTap: () {
+                      final index = todoList
+                          .indexWhere((element) => element.id == task.id);
+                      todoList[index].title = editTextController.text;
+                      editTextController.text = "";
+                      todoList.refresh();
+                      refreshCache();
+
                       Get.back();
-                      // todo: edit task
                     },
                     child: Container(
                       padding: EdgeInsets.all(12),

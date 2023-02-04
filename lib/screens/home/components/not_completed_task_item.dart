@@ -43,7 +43,7 @@ class NotCompletedTaskItem extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  controller.editTask();
+                  controller.editTask(task);
                 },
                 child: Icon(
                   Icons.edit_outlined,
@@ -56,7 +56,7 @@ class NotCompletedTaskItem extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  controller.deleteTask();
+                  controller.deleteTask(task);
                 },
                 child: Icon(
                   Icons.delete_outline,
