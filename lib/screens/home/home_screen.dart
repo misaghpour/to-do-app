@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_list_app/controllers/home_controller.dart';
+import 'package:to_do_list_app/data/models/task.dart';
 
 import 'components/completed_task_item.dart';
 import 'components/not_completed_task_item.dart';
@@ -108,21 +109,21 @@ class HomeScreen extends StatelessWidget {
                 height: 12,
               ),
               Expanded(
-                child: SingleChildScrollView(
+                child: controller.todoList.length > 0 ? SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: !controller.isCompletedMode.value
                         ? [
-                            for (String taskStr in controller.todoList)
-                              NotCompletedTaskItem(taskStr: taskStr),
+                            for (Task task in controller.todoList)
+                              NotCompletedTaskItem(taskStr: task.title),
                           ]
                         : [
-                            for (String taskStr in controller.todoList)
-                              CompletedTaskItem(taskStr: taskStr),
+                            for (Task task in controller.todoList)
+                              CompletedTaskItem(taskStr: task.title),
                           ],
                   ),
-                ),
+                ) : SizedBox(),
               ),
               !controller.isCompletedMode.value
                   ? Container(

@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:to_do_list_app/data/models/task.dart';
 
 class HomeController extends GetxController {
   final textController = TextEditingController();
 
-  RxList<String> todoList = <String>[].obs;
+  RxList<Task> todoList = <Task>[].obs;
   RxBool isCompletedMode = false.obs;
 
   @override
   void onInit() {
+    _initData();
     // TODO: implement onInit
     super.onInit();
   }
 
+  _initData() async {
+    Box box = await Hive.openBox("todo_db");
+
+    var itemListCache = box.get("list");
+    if (itemListCache != null) {
+      RxList<Task> taskList = List<Task>.from(itemListCache).obs;
+      todoList.addAll(taskList);
+    }
+  }
+
   addTask() {
     if (textController.text.isNotEmpty) {
-      todoList.add(textController.text);
+      // todoList.add(textController.text);
       textController.text = "";
     }
   }

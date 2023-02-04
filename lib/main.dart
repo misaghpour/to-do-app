@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:to_do_list_app/data/models/task.dart';
 import 'package:to_do_list_app/routes/app_pages.dart';
 
-void main() {
+/*
+
+flutter packages pub run build_runner build
+
+*/
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
+  try {
+    Hive.registerAdapter(TaskAdapter());
+  } catch (e) {}
+
   runApp(const MyApp());
 }
 
@@ -23,4 +38,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
